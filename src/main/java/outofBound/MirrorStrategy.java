@@ -1,6 +1,11 @@
 package outofBound;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Iterator;
+
+import javax.swing.JFileChooser;
 
 import ij.IJ;
 import ij.ImageJ;
@@ -11,89 +16,119 @@ import io.scif.img.ImgOpener;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 import net.imglib2.view.Views;
 import net.imglib2.algorithm.stats.Normalize;
 public class MirrorStrategy {
 
 	
 	
-	
-	
-	 public static < T extends Comparable< T > & Type< T > > void computeMinMax(
-		        final Iterable< T > input, final T min, final T max )
-		    {
-		        // create a cursor for the image (the order does not matter)
-		        final Iterator< T > iterator = input.iterator();
-		 
-		        // initialize min and max with the first image value
-		        T type = iterator.next();
-		 
-		        min.set( type );
-		        max.set( type );
-		 
-		        // loop over the rest of the data and determine min and max value
-		        while ( iterator.hasNext() )
-		        {
-		            // we need this type more than once
-		            type = iterator.next();
-		 
-		            if ( type.compareTo( min ) < 0 )
-		                min.set( type );
-		 
-		            if ( type.compareTo( max ) > 0 )
-		                max.set( type );
-		        }
-		    }
-	
-	
-	
-	public static void main(String args[]) throws ImgIOException {
+	public static Pair<RandomAccessibleInterval<FloatType>, RandomAccessibleInterval<IntType>> MirrorImage(final Pair<RandomAccessibleInterval<FloatType>,
+			RandomAccessibleInterval<IntType>> Labelpair, final long[] dimension) {
 		
 		
-		String Targetfolder = "/Users/aimachine/Documents/OzgaDeepLearning/OzTrainingDataRaw/Sizedmasks/";
+		for (int d = 0; d < Labelpair.getA().numDimensions(); ++d)
+		assert(Labelpair.getA().dimension(d) == Labelpair.getB().dimension(d));
 		
-		String label = new String("A");
-		// Open an XYT image
-        RandomAccessibleInterval<FloatType> source = new ImgOpener().openImgs("/Users/aimachine/Documents/OzgaDeepLearning/OzTrainingDataRaw/masks/maskImageSize2048/StackMasks.tif", new FloatType()).iterator().next();
+		RandomAccessibleInterval<FloatType> MirrorImage = new ArrayImgFactory<FloatType>().create(dimension, new FloatType());
 		
-        int Xdimension = 2048;
-        int Ydimension = 2048;
-        
-        FinalInterval interval = new FinalInterval(Xdimension, Ydimension);
-        
-        // Out of bounds strategy to resize images
-        for (int t = 0; t < source.dimension(2); ++t){
-        
-        RandomAccessibleInterval<FloatType>  totalimg = Views.hyperSlice(source, 2, t);
-        
-        
-        RandomAccessible< FloatType> Mirror = Views.extendPeriodic( totalimg );
-        
-        
-        RandomAccessibleInterval<FloatType> OutofBounds = Views.interval( Mirror, interval );
-        
-       
-        
-		ImagePlus imp = ImageJFunctions.wrapFloat(OutofBounds, Integer.toString(t));
+		RandomAccessibleInterval<IntType> MirrorMask = new ArrayImgFactory<IntType>().create(dimension, new IntType());
 		
-		FileSaver fsB = new FileSaver(imp);
-		
-		fsB.saveAsTiff(Targetfolder + label +  imp.getTitle() + ".tif");
-        
-        }
-       
-        
-        IJ.log("Images Resized: " + Targetfolder);
-        
-        
-       
+		FinalInterval interval = new FinalInterval(dimension[0], dimension[1]);
 		
 		
+		  
+        RandomAccessibleInterval<FloatType> OutofBoundsImage = Views.interval( Views.extendPeriodic( MirrorImage ), interval );
+        
+        RandomAccessibleInterval<IntType> OutofBoundsMask = Views.interval( Views.extendPeriodic( MirrorMask ), interval );
+        
+		return new ValuePair<RandomAccessibleInterval<FloatType>, RandomAccessibleInterval<IntType>>(OutofBoundsImage, OutofBoundsMask);
 	}
 	
 	
 	
+      public static void SaveOutofBoundImages(Pair<RandomAccessibleInterval<FloatType>, RandomAccessibleInterval<IntType>> Bigpair, File Savedirectory, String savename) {
+		
+		new File(Savedirectory + "/Images").mkdirs();
+		new File(Savedirectory + "/Masks").mkdirs();
+		File SavefolderImage = new File(Savedirectory + "/Images");
+		File SavefolderMask = new File(Savedirectory + "/Masks");
+		
+	
+		
+		
+
+			
+		
+			
+			
+			RandomAccessibleInterval<FloatType> image = Bigpair.getA();
+			RandomAccessibleInterval<IntType> mask = Bigpair.getB();
+		    
+			ImagePlus impint = ImageJFunctions.wrap(mask, "Mask");
+			ImagePlus impfloat = ImageJFunctions.wrapFloat(image, "Image");
+			
+			FileSaver fsInt = new FileSaver(impint);
+			
+			fsInt.saveAsTiff(SavefolderMask  + savename + ".tif");
+			
+	        FileSaver fsFloat = new FileSaver(impfloat);
+			
+	        fsFloat.saveAsTiff(SavefolderImage  + savename + ".tif");
+		
+		
+		
+		
+		
+	}
+	
+      public static void main(String args[]) {
+  		
+  		
+  		File SourceFolderImages = new File("/Users/aimachine/Documents/OzgaDeepLearning/OzTrainingDataRaw/Size256Images/");
+  		
+  		File SourceFolderMasks = new File ("/Users/aimachine/Documents/OzgaDeepLearning/OzTrainingDataRaw/Size256Masks/");
+  		
+  		
+  		long[] dimension = new long[] {128, 128}; 
+  		
+  		JFileChooser chooserImages = new JFileChooser();
+  		JFileChooser chooserMasks = new JFileChooser();
+  		
+  		chooserImages.setCurrentDirectory(SourceFolderImages);
+  		
+  		chooserMasks.setCurrentDirectory(SourceFolderMasks);
+  		
+  		
+  		File[] Images = chooserImages.getSelectedFile().listFiles(new FilenameFilter() {
+  			
+  			@Override
+  			public boolean accept(File pathname, String filename) {
+  				
+  				return filename.endsWith(".tif");
+  			}
+  		});
+  	
+  		
+  		
+  	File[] Masks = chooserMasks.getSelectedFile().listFiles(new FilenameFilter() {
+  		
+  		@Override
+  		public boolean accept(File pathname, String filename) {
+  			
+  			return filename.endsWith(".tif");
+  		}
+  	});
+  	
+  	
+  	String uniqueName = Images[0].getName().replaceFirst("[.][^.]+$", "");
+	
+	
+}
 }
