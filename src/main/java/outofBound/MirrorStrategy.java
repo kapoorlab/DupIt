@@ -2,30 +2,22 @@ package outofBound;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.JFileChooser;
 
-import ij.IJ;
-import ij.ImageJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import io.scif.config.SCIFIOConfig;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
 import net.imglib2.FinalInterval;
-import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.Type;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Pair;
 import net.imglib2.util.ValuePair;
 import net.imglib2.view.Views;
-import net.imglib2.algorithm.stats.Normalize;
 
 public class MirrorStrategy {
 

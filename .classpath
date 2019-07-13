@@ -23,6 +23,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="/scifio"/>
-	<classpathentry kind="src" path="/imglib2-algorithm"/>
+	<classpathentry kind="src" path="/varun-imglib2-algorithm"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
