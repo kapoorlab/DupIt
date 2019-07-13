@@ -44,8 +44,9 @@ public class MyMouseListener implements MouseListener, ImageListener
 	
 	int time;
 	public int getTime(ImagePlus imp) {
-		time = imp.getSlice();
-		return imp.getSlice();
+		time = Math.max(imp.getSlice(), imp.getFrame());
+		
+		return time;
 	}
 		public void run(String arg) {
 			ImagePlus.addImageListener(this);
