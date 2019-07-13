@@ -9,6 +9,14 @@ import ij.ImagePlus;
 public class MyMouseListener implements MouseListener, ImageListener
 {
 	
+	ImagePlus imp;
+	
+	public MyMouseListener(ImagePlus imp) {
+		
+		this.imp = imp;
+	}
+	
+	
 
 	@Override
 	public void mouseReleased( MouseEvent arg0 )
@@ -20,8 +28,8 @@ public class MyMouseListener implements MouseListener, ImageListener
 	public void mousePressed( MouseEvent arg0){
 		
 		
-		
-		System.out.println(arg0.getX() + " " + arg0.getY());}
+		getTime(imp);
+		System.out.println(arg0.getX() + " " + arg0.getY() + " " + time);}
 
 	@Override
 	public void mouseExited( MouseEvent arg0 ) {}
@@ -35,7 +43,6 @@ public class MyMouseListener implements MouseListener, ImageListener
 	int time;
 	public int getTime(ImagePlus imp) {
 		time = imp.getSlice();
-		System.out.println(time);
 		return imp.getSlice();
 	}
 		public void run(String arg) {

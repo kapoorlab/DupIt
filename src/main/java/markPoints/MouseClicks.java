@@ -21,7 +21,7 @@ public class MouseClicks {
 	public void  recordClicks() {
 		
 		
-		MyMouseListener mvl = new MyMouseListener();
+		MyMouseListener mvl = new MyMouseListener(imp);
 		mvl.run("");
 		imp.getCanvas().addMouseListener(mvl);
 		mvl.imageUpdated(imp);
