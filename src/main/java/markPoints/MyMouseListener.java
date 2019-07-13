@@ -3,6 +3,7 @@ package markPoints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import ij.IJ;
 import ij.ImageListener;
 import ij.ImagePlus;
 
@@ -29,7 +30,8 @@ public class MyMouseListener implements MouseListener, ImageListener
 		
 		
 		getTime(imp);
-		System.out.println(arg0.getX() + " " + arg0.getY() + " " + time);}
+		
+		IJ.log(imp.getCanvas().offScreenX(arg0.getX()) + " " + imp.getCanvas().offScreenX(arg0.getY()) + " " + time);}
 
 	@Override
 	public void mouseExited( MouseEvent arg0 ) {}

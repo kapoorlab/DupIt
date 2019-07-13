@@ -35,7 +35,6 @@ public class MouseClicks {
 		
 		
 		new ImageJ();
-		JFrame frame = new JFrame("");
 		
 		
 		ImagePlus imp = new Opener()
