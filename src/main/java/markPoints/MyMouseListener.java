@@ -31,7 +31,7 @@ public class MyMouseListener implements MouseListener, ImageListener
 		
 		getTime(imp);
 		
-		IJ.log(imp.getCanvas().offScreenX(arg0.getX()) + " " + imp.getCanvas().offScreenX(arg0.getY()) + " " + time);}
+		IJ.log(imp.getCanvas().offScreenX(arg0.getX()) + " " + imp.getCanvas().offScreenX(arg0.getY()) + " " + time + " " + slice);}
 
 	@Override
 	public void mouseExited( MouseEvent arg0 ) {}
@@ -43,10 +43,11 @@ public class MyMouseListener implements MouseListener, ImageListener
 	public void mouseClicked( MouseEvent arg0 ) {}
 	
 	int time;
-	public int getTime(ImagePlus imp) {
+	int slice;
+	public void getTime(ImagePlus imp) {
 		time = Math.max(imp.getSlice(), imp.getFrame());
+		slice = Math.min(imp.getSlice(), imp.getFrame());
 		
-		return time;
 	}
 		public void run(String arg) {
 			ImagePlus.addImageListener(this);
