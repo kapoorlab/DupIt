@@ -2,6 +2,11 @@ package markPoints;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import ij.IJ;
 import ij.ImageListener;
@@ -11,10 +16,14 @@ public class MyMouseListener implements MouseListener, ImageListener
 {
 	
 	ImagePlus imp;
+	ArrayList<int[]> eventlist;
+	File csvFile;
 	
-	public MyMouseListener(ImagePlus imp) {
+	public MyMouseListener(ImagePlus imp, ArrayList<int[]> eventlist, File csvFile) {
 		
 		this.imp = imp;
+		this.eventlist = eventlist;
+		this.csvFile = csvFile;
 	}
 	
 	
@@ -28,10 +37,39 @@ public class MyMouseListener implements MouseListener, ImageListener
 	@Override
 	public void mousePressed( MouseEvent arg0){
 		
-		
+		imp.updateAndDraw();
 		getTime(imp);
 		
-		IJ.log(imp.getCanvas().offScreenX(arg0.getX()) + " " + imp.getCanvas().offScreenX(arg0.getY()) + " " + time + " " + slice);}
+		int[] events = new int[] {time, slice,imp.getCanvas().offScreenX(arg0.getX()) ,imp.getCanvas().offScreenY(arg0.getY())  };
+		eventlist.add(events);
+		FileWriter fw;
+		try {
+			fw = new FileWriter(csvFile);
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			bw.write("Time , Z , X  , Y  \n");
+			
+			for (int i = 0; i < eventlist.size(); ++i) {
+				
+				
+			bw.write(eventlist.get(i)[0]+ "," + eventlist.get(i)[1] + "," + eventlist.get(i)[2] + ","
+                    + eventlist.get(i)[3] +
+						"\n");
+			}
+			bw.close();
+			fw.close();
+		}
+		
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	
+	
+	}
+	
+	
 
 	@Override
 	public void mouseExited( MouseEvent arg0 ) {}
