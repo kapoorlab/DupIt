@@ -12,18 +12,29 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path="/scifio"/>
-	<classpathentry kind="src" path="/varun-imglib2-algorithm"/>
 	<classpathentry kind="src" path="/MasterPanels"/>
+	<classpathentry exported="true" kind="lib" path="/Users/aimachine/.m2/repository/loci/loci_plugins/4.4.9/loci_plugins-4.4.9.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="loci"/>
+			<attribute name="maven.artifactId" value="loci_plugins"/>
+			<attribute name="maven.version" value="4.4.9"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/aimachine/.m2/repository/io/scif/scifio/0.37.3/scifio-0.37.3.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="io.scif"/>
+			<attribute name="maven.artifactId" value="scifio"/>
+			<attribute name="maven.version" value="0.37.3"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

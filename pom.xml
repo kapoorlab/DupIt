@@ -5,17 +5,17 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>17.1.1</version>
+		<version>25.0.0</version>
 		<relativePath />
 	</parent>
 
 	<groupId>net.kapoor</groupId>
-	<artifactId>DupIt</artifactId>
+	<artifactId>MouseClicker</artifactId>
 	<version>1.0.0</version>
-
-	<name>Out of Bound duplication</name>
-	<description>Make training data same size with context.</description>
-	<url>https://github.com/kapoorlab/DupIt</url>
+	
+	<name>Record Mouse Clicks</name>
+	<description>Create clicks on timelapse movie.</description>
+	<url>https://github.com/kapoorlab/BTrack</url>
 	<inceptionYear>2017</inceptionYear>
 	<organization>
 		<name>Kapoor Lab</name>
@@ -77,11 +77,14 @@
 
 	<properties>
 		<license.licenseName>gpl_v3</license.licenseName>
-		<license.copyrightOwners>DupIt developers.</license.copyrightOwners>
+		<license.copyrightOwners>MouseClick developers.</license.copyrightOwners>
 
-		<commons-io.version>2.5</commons-io.version>
-		<poi.version>3.12</poi.version>
+		
+		
 
+		
+<imglib2.version>5.8.0</imglib2.version>
+		<zip4j.version>1.3.2</zip4j.version>
 		<!-- NB: Deploy releases to the ImageJ Maven repository. -->
 		<releaseProfiles>deploy-to-imagej</releaseProfiles>
 	</properties>
@@ -91,56 +94,114 @@
 			<id>imagej.public</id>
 			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
-		
-     
 	</repositories>
-
+   
 	<dependencies>
+	
 		<!-- ImgLib2 dependencies -->
-		
+<dependency>
+    <groupId>net.imglib2</groupId>
+    <artifactId>imglib2</artifactId>
+    <version>5.8.0</version>
+</dependency>
 
-		<!-- ImageJ dependencies -->
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-ij</artifactId>
+		</dependency>
+			<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-vistools</artifactId>
+		</dependency>
+	
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigvolumeviewer</artifactId>
+			<version>0.1.5</version>
+		</dependency>
+		<!-- SciJava dependencies -->
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-common</artifactId>
+		
+</dependency>
+
+	<dependency>
+<groupId>org.jgrapht</groupId>
+  <artifactId>jgrapht-core</artifactId>
+  <version>1.4.0</version>
+  </dependency>
+		<!-- SCIFIO dependencies -->
+		<dependency>
+			<groupId>io.scif</groupId>
+			<artifactId>scifio</artifactId>
+		</dependency>
+
+		<!-- OME dependencies -->
+		<dependency>
+			<groupId>ome</groupId>
+			<artifactId>formats-api</artifactId>
+		</dependency>
+
+		<!-- Third party dependencies -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<!-- Test scope dependencies -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.5.0</version>
+			<scope>test</scope>
+		</dependency>
+	
+		<dependency>
+			<groupId>net.lingala.zip4j</groupId>
+			<artifactId>zip4j</artifactId>
+			<version>${zip4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
 	
 
+		<!-- ImageJ dependencies -->
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
+		</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-svggen -->
+<!-- https://mvnrepository.com/artifact/org.jfree/jfreesvg -->
+
+
 		<!-- Fiji dependencies -->
-		<!-- https://mvnrepository.com/artifact/net.imagej/ij -->
-
-
-		
+		<dependency>
+			<!-- NB: dependency:analyze erroneously flags this, but it's required -->
+			<groupId>sc.fiji</groupId>
+			<artifactId>Fiji_Plugins</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>fiji-lib</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>legacy-imglib1</artifactId>
 		</dependency>
 
-		<!-- Third party dependencies -->
-		<dependency>
-			<!-- NB: dependency:analyze erroneously flags this, but it's required -->
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>${commons-io.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>gov.nist.math</groupId>
-			<artifactId>jama</artifactId>
-		</dependency>
 	
-		<dependency>
-			<groupId>net.sf.jgrapht</groupId>
-			<artifactId>jgrapht</artifactId>
-		</dependency>
-		<dependency>
-			<!-- NB: dependency:analyze erroneously flags this, but it's required -->
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>${poi.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jfree</groupId>
-			<artifactId>jcommon</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jfree</groupId>
-			<artifactId>jfreechart</artifactId>
-		</dependency>
+
+		
+	
+	
+		
+		
 	</dependencies>
+
 </project>

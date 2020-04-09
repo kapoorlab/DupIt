@@ -2,6 +2,7 @@ package markPoints;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JFileChooser;
 
@@ -28,7 +29,7 @@ public class MouseClickSaveDirectoryListener implements ActionListener {
 		if(parent.saveFile == null)
 		parent.chooserA.setCurrentDirectory(new java.io.File("."));
 		else
-			parent.chooserA.setCurrentDirectory(parent.saveFile);	
+			parent.chooserA.setCurrentDirectory(new File(parent.impOrig.getOriginalFileInfo().directory));	
 		
 		
 		parent.chooserA.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);

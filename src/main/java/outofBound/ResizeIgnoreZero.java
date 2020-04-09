@@ -9,8 +9,7 @@ import javax.swing.JFileChooser;
 
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
+
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
@@ -133,7 +132,7 @@ public class ResizeIgnoreZero {
 	 * @param args
 	 * @throws ImgIOException
 	 */
-
+/*
 	public static void main(String args[]) throws ImgIOException {
 
 		File SourceFolderImages = new File(
@@ -192,5 +191,6 @@ public class ResizeIgnoreZero {
 		}
 
 	}
+	*/
 
 }

@@ -1,5 +1,6 @@
 package markPoints;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedWriter;
@@ -11,19 +12,21 @@ import java.util.ArrayList;
 import ij.IJ;
 import ij.ImageListener;
 import ij.ImagePlus;
+import ij.gui.OvalRoi;
 
 public class MyMouseListener implements MouseListener, ImageListener
 {
 	
-	ImagePlus imp;
+	InteractiveMouseClicks parent;
 	ArrayList<int[]> eventlist;
-	File csvFile;
 	
-	public MyMouseListener(ImagePlus imp, ArrayList<int[]> eventlist, File csvFile) {
+
+	
+	public MyMouseListener(InteractiveMouseClicks parent,   ArrayList<int[]> eventlist) {
 		
-		this.imp = imp;
+		this.parent = parent;
 		this.eventlist = eventlist;
-		this.csvFile = csvFile;
+		
 	}
 	
 	
@@ -37,23 +40,52 @@ public class MyMouseListener implements MouseListener, ImageListener
 	@Override
 	public void mousePressed( MouseEvent arg0){
 		
-		imp.updateAndDraw();
-		getTime(imp);
-		
-		int[] events = new int[] {time, slice,imp.getCanvas().offScreenX(arg0.getX()) ,imp.getCanvas().offScreenY(arg0.getY())  };
+		parent.impOrig.updateAndDraw();
+		getTime(parent.impOrig);
+		int[] events = new int[] {parent.thirdDimension,parent.impOrig.getCanvas().offScreenX(arg0.getX()) ,parent.impOrig.getCanvas().offScreenY(arg0.getY())  };
 		eventlist.add(events);
+		
+		ArrayList<OvalRoi> eventrois = new ArrayList<OvalRoi>();
+		OvalRoi points =  new OvalRoi(events[1], events[2],
+				10, 10);
+		eventrois.add(points);
+		
+		parent.ClickedPoints.put(parent.thirdDimension, eventrois);
+		
+		if(parent.ClickedPoints.containsKey(parent.thirdDimension)) {
+			ArrayList<OvalRoi> currentroi = parent.ClickedPoints.get(parent.thirdDimension);
+			
+			for(OvalRoi roi:currentroi) {
+			roi.setStrokeColor(Color.RED);
+			parent.impOrig.getOverlay().add(roi);
+		
+		
+			}
+			
+			parent.impOrig.updateAndDraw();
+		} else {
+			
+			
+			parent.impOrig.getOverlay().clear();
+			parent.impOrig.updateAndDraw();
+			
+		}
+		
+		
+		
+		File csvFile = new File(parent.saveFile + "//"  +  parent.addToName +".csv");
+		
 		FileWriter fw;
 		try {
 			fw = new FileWriter(csvFile);
 			BufferedWriter bw = new BufferedWriter(fw);
 
-			bw.write("Time , Z , X  , Y  \n");
+			bw.write("Time , X  , Y  \n");
 			
 			for (int i = 0; i < eventlist.size(); ++i) {
 				
 				
-			bw.write(eventlist.get(i)[0]+ "," + eventlist.get(i)[1] + "," + eventlist.get(i)[2] + ","
-                    + eventlist.get(i)[3] +
+			bw.write(eventlist.get(i)[0]+ "," + eventlist.get(i)[1] + "," + eventlist.get(i)[2] + 
 						"\n");
 			}
 			bw.close();
@@ -80,11 +112,9 @@ public class MyMouseListener implements MouseListener, ImageListener
 	@Override
 	public void mouseClicked( MouseEvent arg0 ) {}
 	
-	int time;
-	int slice;
+	
 	public void getTime(ImagePlus imp) {
-		time = Math.max(imp.getSlice(), imp.getFrame());
-		slice = Math.min(imp.getSlice(), imp.getFrame());
+		
 		
 	}
 		public void run(String arg) {

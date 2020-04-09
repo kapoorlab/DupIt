@@ -11,47 +11,36 @@ import javax.swing.JFrame;
 
 import ij.ImageJ;
 import ij.ImagePlus;
+import ij.gui.OvalRoi;
 import ij.io.Opener;
 
 
 public class MouseClicks {
 	
-	public final ImagePlus imp;
-	public final File saveFile;
+	public final InteractiveMouseClicks parent;
+	public final File savedir;
 	
-	public MouseClicks(ImagePlus imp, File saveFile) {
-		this.imp = imp;
-		this.saveFile = saveFile;
+	public MouseClicks(InteractiveMouseClicks parent,  File savedir) {
+		
+		this.parent = parent;
+		
+		this.savedir = savedir;
+		
 	}
 	
 	public void  recordClicks() {
-		
+		parent.chooserA.setCurrentDirectory(savedir);	
 		ArrayList<int[]> eventlist = new ArrayList<int[]>();
-		MyMouseListener mvl = new MyMouseListener(imp,eventlist, saveFile);
+		MyMouseListener mvl = new MyMouseListener(parent,eventlist);
 		mvl.run("");
-		imp.getCanvas().addMouseListener(mvl);
-		mvl.imageUpdated(imp);
+		parent.impOrig.getCanvas().addMouseListener(mvl);
+		mvl.imageUpdated(parent.impOrig);
 		
 		
 	}
 	
 	
 	
-	public static void main(String[] args) {
-		
-		
-		new ImageJ();
-		
-		
-		ImagePlus imp = new Opener()
-				.openImage("/Users/aimachine/Documents/VicData/TestMovie/Movie1.tif");
-		File saveFile = new File("/Users/aimachine/Documents/VicData/TestMovie/");
-		String addToName = "NormalsMovie1";
-		File csvFile = new File(saveFile + "//" + addToName +  ".csv");
-		imp.show();
-		MouseClicks record = new MouseClicks(imp, csvFile);
-		record.recordClicks();
-		
-	}
+
 	
 }

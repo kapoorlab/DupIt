@@ -23,7 +23,7 @@ public class MouseClickFilenameListener  implements TextListener {
 		    String s = tc.getText();
 		   
 		    if (s.length() > 0)
-			parent.addToName = s;
+		    	parent.addToName = s;
 			
 		}
 
