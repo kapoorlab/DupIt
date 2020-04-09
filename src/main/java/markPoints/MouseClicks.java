@@ -44,9 +44,9 @@ public class MouseClicks {
 		
 		
 		ImagePlus imp = new Opener()
-				.openImage("/Users/aimachine/Documents/VicData/Network/VicVsVarun-1.tif");
-		File saveFile = new File("/Users/aimachine/Documents/VicData/");
-		String addToName = "Negative";
+				.openImage("/Users/aimachine/Documents/VicData/TestMovie/Movie1.tif");
+		File saveFile = new File("/Users/aimachine/Documents/VicData/TestMovie/");
+		String addToName = "NormalsMovie1";
 		File csvFile = new File(saveFile + "//" + addToName +  ".csv");
 		imp.show();
 		MouseClicks record = new MouseClicks(imp, csvFile);
