@@ -19,7 +19,6 @@ public class MyMouseListener implements MouseListener, ImageListener
 	
 	InteractiveMouseClicks parent;
 	ArrayList<int[]> eventlist;
-	
 
 	
 	public MyMouseListener(InteractiveMouseClicks parent,   ArrayList<int[]> eventlist) {
@@ -40,17 +39,26 @@ public class MyMouseListener implements MouseListener, ImageListener
 	@Override
 	public void mousePressed( MouseEvent arg0){
 		
-		parent.impOrig.updateAndDraw();
 		getTime(parent.impOrig);
 		int[] events = new int[] {parent.thirdDimension,parent.impOrig.getCanvas().offScreenX(arg0.getX()) ,parent.impOrig.getCanvas().offScreenY(arg0.getY())  };
 		eventlist.add(events);
 		
-		ArrayList<OvalRoi> eventrois = new ArrayList<OvalRoi>();
+	
 		OvalRoi points =  new OvalRoi(events[1], events[2],
 				10, 10);
-		eventrois.add(points);
+		parent.eventrois.add(points);
 		
-		parent.ClickedPoints.put(parent.thirdDimension, eventrois);
+		if(parent.ClickedPoints.containsKey(parent.thirdDimension)) {
+			
+			
+			ArrayList<OvalRoi> currentroi = parent.ClickedPoints.get(parent.thirdDimension);
+			if(parent.eventrois.size() > 0)
+			parent.eventrois.addAll(currentroi);
+			
+		}
+		
+		
+		parent.ClickedPoints.put(parent.thirdDimension, parent.eventrois);
 		
 		if(parent.ClickedPoints.containsKey(parent.thirdDimension)) {
 			ArrayList<OvalRoi> currentroi = parent.ClickedPoints.get(parent.thirdDimension);
@@ -63,13 +71,7 @@ public class MyMouseListener implements MouseListener, ImageListener
 			}
 			
 			parent.impOrig.updateAndDraw();
-		} else {
-			
-			
-			parent.impOrig.getOverlay().clear();
-			parent.impOrig.updateAndDraw();
-			
-		}
+		} 
 		
 		
 		

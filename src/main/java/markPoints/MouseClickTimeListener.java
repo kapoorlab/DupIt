@@ -45,11 +45,11 @@ public class MouseClickTimeListener implements AdjustmentListener {
 	@Override
 	public void adjustmentValueChanged(AdjustmentEvent e) {
 		
-		
+		parent.eventrois = new ArrayList<OvalRoi>();
 		
 		parent.thirdDimension = (int) Math.round(computeValueFromScrollbarPosition(e.getValue(), min, max, scrollbarSize));
 
-
+		parent.impOrig.getOverlay().clear();
 		deltaScrollbar
 		.setValue(computeScrollbarPositionFromValue(parent.thirdDimension, min, max, scrollbarSize));
 		
@@ -60,22 +60,18 @@ public class MouseClickTimeListener implements AdjustmentListener {
 		parent.panelFirst.repaint();
 		
 		
-		parent.impOrig.getOverlay().clear();
-		parent.impOrig.updateAndDraw();
-		
+
 		if(parent.ClickedPoints.containsKey(parent.thirdDimension)) {
 			ArrayList<OvalRoi> currentroi = parent.ClickedPoints.get(parent.thirdDimension);
-			
 			for(OvalRoi roi:currentroi) {
 			roi.setStrokeColor(Color.RED);
 			parent.impOrig.getOverlay().add(roi);
 		
-		
+			
 			}
 			
 		}
-		else
-			parent.impOrig.getOverlay().clear();
+		
 			
 			parent.impOrig.updateAndDraw();
 		

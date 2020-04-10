@@ -31,6 +31,7 @@ public class MouseClicks {
 	public void  recordClicks() {
 		parent.chooserA.setCurrentDirectory(savedir);	
 		ArrayList<int[]> eventlist = new ArrayList<int[]>();
+		
 		MyMouseListener mvl = new MyMouseListener(parent,eventlist);
 		mvl.run("");
 		parent.impOrig.getCanvas().addMouseListener(mvl);

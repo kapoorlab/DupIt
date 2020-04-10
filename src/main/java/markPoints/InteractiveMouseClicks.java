@@ -60,7 +60,7 @@ public class InteractiveMouseClicks  extends JPanel  {
 	  public JPanel Timeselect = new JPanel();
 	  public JComboBox<String> ChooseImage;
 	  public String[] imageNames;
-
+	  ArrayList<OvalRoi> eventrois = new ArrayList<OvalRoi>();
 
 
 	public String[] blankimageNames;
