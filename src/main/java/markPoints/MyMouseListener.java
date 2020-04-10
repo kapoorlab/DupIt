@@ -18,13 +18,13 @@ public class MyMouseListener implements MouseListener, ImageListener
 {
 	
 	InteractiveMouseClicks parent;
-	ArrayList<int[]> eventlist;
+	
 
 	
 	public MyMouseListener(InteractiveMouseClicks parent,   ArrayList<int[]> eventlist) {
 		
 		this.parent = parent;
-		this.eventlist = eventlist;
+		
 		
 	}
 	
@@ -41,7 +41,7 @@ public class MyMouseListener implements MouseListener, ImageListener
 		
 		getTime(parent.impOrig);
 		int[] events = new int[] {parent.thirdDimension,parent.impOrig.getCanvas().offScreenX(arg0.getX()) ,parent.impOrig.getCanvas().offScreenY(arg0.getY())  };
-		eventlist.add(events);
+		parent.eventlist.add(events);
 		
 	
 		OvalRoi points =  new OvalRoi(events[1], events[2],
@@ -84,10 +84,10 @@ public class MyMouseListener implements MouseListener, ImageListener
 
 			bw.write("Time , X  , Y  \n");
 			
-			for (int i = 0; i < eventlist.size(); ++i) {
+			for (int i = 0; i < parent.eventlist.size(); ++i) {
 				
 				
-			bw.write(eventlist.get(i)[0]+ "," + eventlist.get(i)[1] + "," + eventlist.get(i)[2] + 
+			bw.write(parent.eventlist.get(i)[0]+ "," + parent.eventlist.get(i)[1] + "," + parent.eventlist.get(i)[2] + 
 						"\n");
 			}
 			bw.close();

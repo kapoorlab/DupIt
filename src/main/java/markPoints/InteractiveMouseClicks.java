@@ -61,7 +61,7 @@ public class InteractiveMouseClicks  extends JPanel  {
 	  public JComboBox<String> ChooseImage;
 	  public String[] imageNames;
 	  ArrayList<OvalRoi> eventrois = new ArrayList<OvalRoi>();
-
+		ArrayList<int[]> eventlist = new ArrayList<int[]>();
 
 	public String[] blankimageNames;
 	  public String clickstring = "Select Movie to Click";
@@ -322,7 +322,7 @@ public class InteractiveMouseClicks  extends JPanel  {
 			timeslider.addAdjustmentListener(new MouseClickTimeListener(this, timeText, timestring, thirdDimensionsliderInit,
 					thirdDimensionSize, scrollbarSize, timeslider));
 			System.out.println(thirdDimensionSize);
-			inputField.addTextListener(new MouseClickFilenameListener(this));
+			inputField.addTextListener(new MouseClickFilenameListener(this, false));
 			ChooseDirectory.addActionListener(new MouseClickSaveDirectoryListener(this));
 			cl.show(panelCont, "1");
 		  
