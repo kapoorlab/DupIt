@@ -11,7 +11,6 @@ public class MyImageListener implements ImageListener {
 	int time;
 	public int getTime(ImagePlus imp) {
 		time = imp.getSlice();
-		System.out.println(time);
 		return imp.getSlice();
 	}
 		public void run(String arg) {

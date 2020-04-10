@@ -102,6 +102,8 @@ public class InteractiveMouseClicks  extends JPanel  {
 
 			return thirdDimensionSize;
 		}
+		
+		/*
 		public static  < T extends NumericType< T > & NativeType< T > > RandomAccessibleInterval<T> getCurrentView(RandomAccessibleInterval<T> originalimg,
 				int thirdDimension, int thirdDimensionSize) {
 
@@ -127,6 +129,7 @@ public class InteractiveMouseClicks  extends JPanel  {
 
 		}
 		
+		*/
 		
 		public void run() {
 			if (ndims == 3) {
@@ -138,7 +141,7 @@ public class InteractiveMouseClicks  extends JPanel  {
 			}
 			
 			setTime(thirdDimension);
-			CurrentView = getCurrentView(inputimage, thirdDimension, thirdDimensionSize);
+			CurrentView = inputimage; //getCurrentView(inputimage, thirdDimension, thirdDimensionSize);
 			
 			impOrig = ImageJFunctions.show(CurrentView, "Original Image");
 			impOrig.setTitle("Active Image" + " " + "time point : " + thirdDimension);
@@ -169,7 +172,8 @@ public class InteractiveMouseClicks  extends JPanel  {
 		if (change == ValueChange.THIRDDIMmouse)
 		{
 			impOrig.setTitle("Active Image" + " " + "time point : " + thirdDimension);
-			CurrentView = getCurrentView(inputimage, thirdDimension, thirdDimensionSize);
+			System.out.println(inputimage);
+			CurrentView = inputimage; //getCurrentView(inputimage, thirdDimension, thirdDimensionSize);
 		repaintView(CurrentView);
 		
 		}

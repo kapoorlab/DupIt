@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>net.kapoor</groupId>
-	<artifactId>MouseClicker</artifactId>
+	<artifactId>MouseClicker_</artifactId>
 	<version>1.0.0</version>
 	
 	<name>Record Mouse Clicks</name>

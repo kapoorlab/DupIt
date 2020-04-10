@@ -35,7 +35,7 @@ public class ChooseMouseMap implements ActionListener {
 		   
 		
     	    parent.impOrig = WindowManager.getImage(imagename);
-    		IJ.selectWindow(imagename);
+    		//IJ.selectWindow(imagename);
     		IJ.run("RGB Color");
     		File savedir = new File(parent.impOrig.getOriginalFileInfo().directory);
     	    WindowManager.getCurrentImage().close();

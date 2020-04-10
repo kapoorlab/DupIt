@@ -3,6 +3,8 @@ package markPoints;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,6 +15,8 @@ import ij.IJ;
 import ij.ImageListener;
 import ij.ImagePlus;
 import ij.gui.OvalRoi;
+import markPoints.InteractiveMouseClicks.ValueChange;
+import mpicbg.imglib.util.Util;
 
 public class MyMouseListener implements MouseListener, ImageListener
 {
@@ -116,7 +120,16 @@ public class MyMouseListener implements MouseListener, ImageListener
 	
 	
 	public void getTime(ImagePlus imp) {
+		int time = imp.getC();
 		
+		parent.thirdDimension = time;
+		parent.inputFieldT.setText(Integer.toString((int)parent.thirdDimension));
+		parent.panelFirst.validate();
+		parent.panelFirst.repaint();
+		
+		parent.timeslider.setValue(computeScrollbarPositionFromValue(parent.thirdDimension, parent.thirdDimensionsliderInit, parent.thirdDimensionSize, parent.scrollbarSize));
+		parent.timeslider.repaint();
+		parent.timeslider.validate();
 		
 	}
 		public void run(String arg) {
@@ -136,6 +149,16 @@ public class MyMouseListener implements MouseListener, ImageListener
 			
 			
 			getTime(imp);
+		}
+
+
+		public static int computeScrollbarPositionFromValue(final float sigma, final float min, final float max,
+				final int scrollbarSize) {
+			return Util.round(((sigma - min) / (max - min)) * scrollbarSize);
+		}
+		public static float computeValueFromScrollbarPosition(final int scrollbarPosition, final float min, final float max,
+				final int scrollbarSize) {
+			return min + (scrollbarPosition / (float) scrollbarSize) * (max - min);
 		}
 
 }
