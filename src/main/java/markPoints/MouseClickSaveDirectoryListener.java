@@ -24,12 +24,11 @@ public class MouseClickSaveDirectoryListener implements ActionListener {
 	@Override
 	public void actionPerformed(final ActionEvent arg0) {
 		
-		
 		parent.chooserA = new JFileChooser();
 		if(parent.saveFile == null)
 		parent.chooserA.setCurrentDirectory(new java.io.File("."));
 		else
-			parent.chooserA.setCurrentDirectory(new File(parent.impOrig.getOriginalFileInfo().directory));	
+			parent.chooserA.setCurrentDirectory(parent.saveFile);	
 		
 		
 		parent.chooserA.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);

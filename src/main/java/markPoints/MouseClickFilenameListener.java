@@ -55,10 +55,10 @@ public class MouseClickFilenameListener  implements TextListener {
 				    	if (arg0.getKeyChar() == KeyEvent.VK_ENTER&& !pressed) {
 							pressed = true;
 						    if (s.length() > 0)
-						    	parent.addToName = s;
+						    	parent.addToName = s + parent.eventname;
 						    
 							
-					    	parent.ClickedPoints = new HashMap<Integer, ArrayList<OvalRoi>>();
+					    	parent.ClickedPoints = new HashMap<Integer, ArrayList<OvalObject>>();
 					    	parent.eventlist = new ArrayList<int[]>();
 						}
 

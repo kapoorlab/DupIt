@@ -1,6 +1,7 @@
 package markPoints;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -28,16 +29,11 @@ import ij.WindowManager;
 import ij.gui.OvalRoi;
 import ij.gui.Overlay;
 import ij.io.Opener;
-import ij.plugin.PlugIn;
-import kalmanGUI.CovistoKalmanPanel;
 import loadfile.CovistoOneChFileLoader;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.ImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.NumericType;
 import net.imglib2.view.Views;
 
 public class InteractiveMouseClicks  extends JPanel  {
@@ -47,9 +43,10 @@ public class InteractiveMouseClicks  extends JPanel  {
 	 */
 	private static final long serialVersionUID = 1L;
 
-
-
-	  public HashMap<Integer, ArrayList<OvalRoi>> ClickedPoints = new HashMap<Integer, ArrayList<OvalRoi>>();
+      public String eventname;
+      public String imagename;
+	  public HashMap<Integer, ArrayList<OvalObject>> ClickedPoints = new HashMap<Integer, ArrayList<OvalObject>>();
+	  public HashMap<Integer, ArrayList<OvalRoi>> UnClickedPoints = new HashMap<Integer, ArrayList<OvalRoi>>();
 	  public final Insets insets = new Insets(10, 10, 0, 10);
 	  public final GridBagLayout layout = new GridBagLayout();
 	  public final GridBagConstraints c = new GridBagConstraints();
@@ -59,18 +56,22 @@ public class InteractiveMouseClicks  extends JPanel  {
 	  public JPanel panelCont = new JPanel();
 	  public JPanel Timeselect = new JPanel();
 	  public JComboBox<String> ChooseImage;
+	  public JComboBox<String> ChooseEvent;
 	  public String[] imageNames;
-	  ArrayList<OvalRoi> eventrois = new ArrayList<OvalRoi>();
+	  ArrayList<OvalObject> eventrois = new ArrayList<OvalObject>();
 		ArrayList<int[]> eventlist = new ArrayList<int[]>();
 
 	public String[] blankimageNames;
-	  public String clickstring = "Select Movie to Click";
+	public String[] eventNames = new String[10];
+		
+	  
+	  public String clickstring = "Movie Clicker";
 	  public Border chooseclickfile = new CompoundBorder(new TitledBorder(clickstring),
 				new EmptyBorder(c.insets));
 	  public TextField inputField;
 	  public Label inputLabel;
 	  
-	  public final JButton ChooseDirectory = new JButton("Choose Directory to save results in");
+	  public final JButton ChooseDirectory = new JButton("Change Default Directory");
 	  public RandomAccessibleInterval<ARGBType> CurrentView;
 	  public JFileChooser chooserA = new JFileChooser();
 	  
@@ -79,9 +80,9 @@ public class InteractiveMouseClicks  extends JPanel  {
 		public int thirdDimensionsliderInit = 1;
 		public int thirdDimension;
 		public int thirdDimensionSize;
-	  public String addToName = "Normal_Events";
+	  public String addToName = "";
 	  
-	  public ImagePlus impOrig;
+	  public ImagePlus impOrig,impSuperOrig;
 	  public RandomAccessibleInterval<ARGBType> inputimage;
 	  public int ndims;
 	  public Overlay overlay;
@@ -144,7 +145,7 @@ public class InteractiveMouseClicks  extends JPanel  {
 			CurrentView = inputimage; //getCurrentView(inputimage, thirdDimension, thirdDimensionSize);
 			
 			impOrig = ImageJFunctions.show(CurrentView, "Original Image");
-			impOrig.setTitle("Active Image" + " " + "time point : " + thirdDimension);
+			impOrig.setTitle("Active Image" + " " + "Do not close this " );
 			  if (overlay == null) {
 
 	    	    	overlay = new Overlay();
@@ -171,7 +172,7 @@ public class InteractiveMouseClicks  extends JPanel  {
 		
 		if (change == ValueChange.THIRDDIMmouse)
 		{
-			impOrig.setTitle("Active Image" + " " + "time point : " + thirdDimension);
+			impOrig.setTitle("Active Image" + " " + "Do not close this " );
 			System.out.println(inputimage);
 			CurrentView = inputimage; //getCurrentView(inputimage, thirdDimension, thirdDimensionSize);
 		repaintView(CurrentView);
@@ -218,20 +219,25 @@ public class InteractiveMouseClicks  extends JPanel  {
 				scrollbarSize + 10);
 		public Border timeborder = new CompoundBorder(new TitledBorder("Select time"), new EmptyBorder(c.insets));
 		public JPanel KalmanPanel = new JPanel();
+		public Label explain = new Label("Left click marks positive selection" , Label.CENTER);
+		public Label secondexplain = new Label("Shift Left click marks negative selction" , Label.CENTER);
+		
 	  public InteractiveMouseClicks() {
 		  
 			imageNames = WindowManager.getImageTitles();
-			blankimageNames = new String[imageNames.length + 1];
+			blankimageNames = new String[imageNames.length];
 		
 			
 			for(int i = 0; i < imageNames.length; ++i)
 				blankimageNames[i] = imageNames[i];
 			
 			ChooseImage = new JComboBox<String>(blankimageNames);
+			
 			CovistoOneChFileLoader original = new CovistoOneChFileLoader(clickstring, blankimageNames);
 			
 			Panelfile = original.SingleChannelOption();
 			original.ChooseImage.addActionListener(new ChooseMouseMap(this, original.ChooseImage));
+			
 			common();
 			panelFirst.setVisible(true);
 			
@@ -247,9 +253,18 @@ public class InteractiveMouseClicks  extends JPanel  {
 		  
 		  
 
-		  
-		  
-		  inputLabel = new Label("Please enter event/cell type of interest");
+		  int i = 0;
+		  eventNames[i] = "None";
+		  eventNames[i = i + 1] = "Normal";
+		  eventNames[i = i + 1] = "Apoptosis";
+		  eventNames[i = i + 1] = "Division";
+		  eventNames[i = i + 1] = "Macrocheate";
+		  eventNames[i = i + 1] = "NonMature";
+		  eventNames[i = i + 1] = "Mature";
+		  eventNames[i = i + 1] = "Rearrangement";
+		  eventNames[i = i + 1] = "NoApoptsis";
+		  eventNames[i = i + 1] = "NoDivision";
+		  inputLabel = new Label("Enter filename + Event type to append to name");
 		  inputField = new TextField(25);
 		  inputField.setText(addToName);
 			
@@ -289,32 +304,37 @@ public class InteractiveMouseClicks  extends JPanel  {
 			
 			// Put time slider
 
-			Timeselect.add(timeText, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
+		/*	Timeselect.add(timeText, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
 					GridBagConstraints.HORIZONTAL, insets, 0, 0));
 
-			Timeselect.add(timeslider, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
+		//	Timeselect.add(timeslider, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
 					GridBagConstraints.HORIZONTAL, insets, 0, 0));
 
-			Timeselect.add(inputFieldT, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
+		//	Timeselect.add(inputFieldT, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
 					GridBagConstraints.HORIZONTAL, insets, 0, 0));
 	
+		*/	
 			
+		//	Timeselect.setBorder(timeborder);
 			
-			Timeselect.setBorder(timeborder);
-			
-			panelFirst.add(Timeselect, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, insets, 0, 0));
+		//	panelFirst.add(Timeselect, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, insets, 0, 0));
 	       
 		
-
-			
-			Panelfile.add(inputLabel, new GridBagConstraints(0, 2, 3, 1, 0.1, 0.0, GridBagConstraints.WEST,
+			ChooseEvent = new JComboBox<String>(eventNames);
+			ChooseEvent.addActionListener(new EventTypeListener(this, ChooseEvent));
+			Panelfile.add(explain, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, insets, 0, 0));
+			Panelfile.add(secondexplain, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, insets, 0, 0));
+			Panelfile.add(inputLabel, new GridBagConstraints(0, 4, 3, 1, 0.1, 0.0, GridBagConstraints.WEST,
 					GridBagConstraints.RELATIVE, insets, 0, 0));
 			
-			Panelfile.add(inputField, new GridBagConstraints(0, 3, 3, 1, 0.1, 0.0, GridBagConstraints.WEST,
+			Panelfile.add(inputField, new GridBagConstraints(0, 5, 3, 1, 0.1, 0.0, GridBagConstraints.WEST,
 					GridBagConstraints.RELATIVE, insets, 0, 0));
 			
-		//	Panelfile.add(ChooseDirectory, new GridBagConstraints(0, 3, 3, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-		//			GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 10), 0, 0));
+			Panelfile.add(ChooseEvent, new GridBagConstraints(0, 6, 3, 1, 0.1, 0.0, GridBagConstraints.WEST,
+					GridBagConstraints.RELATIVE, insets, 0, 0));
+			
+			Panelfile.add(ChooseDirectory, new GridBagConstraints(0, 7, 3, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+					GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 10), 0, 0));
 			
 			
 			panelFirst.add(Panelfile, new GridBagConstraints(0, 0, 3, 1, 0.0, 0.0, GridBagConstraints.WEST,
@@ -325,7 +345,6 @@ public class InteractiveMouseClicks  extends JPanel  {
 			
 			timeslider.addAdjustmentListener(new MouseClickTimeListener(this, timeText, timestring, thirdDimensionsliderInit,
 					thirdDimensionSize, scrollbarSize, timeslider));
-			System.out.println(thirdDimensionSize);
 			inputField.addTextListener(new MouseClickFilenameListener(this, false));
 			ChooseDirectory.addActionListener(new MouseClickSaveDirectoryListener(this));
 			cl.show(panelCont, "1");
@@ -347,10 +366,15 @@ public class InteractiveMouseClicks  extends JPanel  {
 		ImagePlus imp = new Opener()
 				.openImage("/Users/aimachine/Documents/VicData/TestMovie/SmallTest/SmallPatch.tif");
 		imp.show();
-		InteractiveMouseClicks panel = new InteractiveMouseClicks();
 
-		frame.getContentPane().add(panel, "Center");
-		frame.setSize(panel.getPreferredSize());
+	
+		InteractiveMouseClicks parent = new InteractiveMouseClicks();
+
+		parent.ChooseDirectory.setEnabled(false);
+		parent.inputField.setEnabled(false);
+		parent.ChooseEvent.setEnabled(false);
+		frame.getContentPane().add(parent, "Center");
+		frame.setSize(parent.getPreferredSize());
 	}
 
 

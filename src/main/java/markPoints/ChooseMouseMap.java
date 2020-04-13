@@ -31,30 +31,33 @@ public class ChooseMouseMap implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		String imagename = (String) choice.getSelectedItem();
-		
+		parent.imagename = imagename;
 		   
 		
-    	    parent.impOrig = WindowManager.getImage(imagename);
+    	    parent.impSuperOrig = WindowManager.getImage(imagename);
     		//IJ.selectWindow(imagename);
-    		IJ.run("RGB Color");
-    		File savedir = new File(parent.impOrig.getOriginalFileInfo().directory);
-    	    WindowManager.getCurrentImage().close();
+    		//IJ.run("RGB Color");
+    		File savedir = new File(parent.impSuperOrig.getOriginalFileInfo().directory);
+    	    //WindowManager.getCurrentImage().close();
     	    
     	    
     	    parent.inputimage = 
-    	    		pluginTools.simplifiedio.SimplifiedIO.openImage(parent.impOrig.getOriginalFileInfo().directory + parent.impOrig.getOriginalFileInfo().fileName, new ARGBType());
+    	    		pluginTools.simplifiedio.SimplifiedIO.openImage(parent.impSuperOrig.getOriginalFileInfo().directory + parent.impSuperOrig.getOriginalFileInfo().fileName, new ARGBType());
     	    parent.ndims = parent.inputimage.numDimensions();
     	    
     	  
     	    
     	    
-    	    parent.addToName = imagename.substring(0, imagename.lastIndexOf('.')) + parent.addToName;
-    	    parent.saveFile = new File(parent.impOrig.getOriginalFileInfo().directory);
+    	    parent.addToName = parent.imagename.substring(0, parent.imagename.lastIndexOf('.')) + parent.addToName;
+    	    parent.saveFile = new File(parent.impSuperOrig.getOriginalFileInfo().directory);
     	    parent.inputField.setText( parent.addToName);
     	    parent.inputField.repaint();
     	    parent.inputField.validate();
        	
-	   
+
+    		parent.ChooseDirectory.setEnabled(true);
+    		parent.inputField.setEnabled(true);
+    		parent.ChooseEvent.setEnabled(true);
        	parent.run();
        
 		MouseClicks record = new MouseClicks(parent, savedir);

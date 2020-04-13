@@ -61,7 +61,7 @@ public class MouseClickTlocListener implements TextListener {
 							parent.thirdDimension = parent.thirdDimensionSize;
 						} else
 							parent.thirdDimension = Integer.parseInt(s);
-			    		parent.eventrois = new ArrayList<OvalRoi>();
+			    		parent.eventrois = new ArrayList<OvalObject>();
 			    		parent.impOrig.getOverlay().clear();
 					parent.timeText.setText("Current T = " + parent.thirdDimension);
 					parent.updatePreview(ValueChange.THIRDDIMmouse);
@@ -71,13 +71,12 @@ public class MouseClickTlocListener implements TextListener {
 					parent.timeslider.validate();
 		
 					if(parent.ClickedPoints.containsKey(parent.thirdDimension)) {
-						ArrayList<OvalRoi> currentroi = parent.ClickedPoints.get(parent.thirdDimension);
+						ArrayList<OvalObject> currentroi = parent.ClickedPoints.get(parent.thirdDimension);
+						for(OvalObject roi:currentroi) {
+						roi.roilist.setStrokeColor(roi.colorlist);
+						parent.impOrig.getOverlay().add(roi.roilist);
+					
 						
-						for(OvalRoi roi:currentroi) {
-						roi.setStrokeColor(Color.RED);
-						parent.impOrig.getOverlay().add(roi);
-					
-					
 						}
 						
 					}
